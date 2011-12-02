@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+<head>
+	<title></title>
+    <link rel="stylesheet" type="text/css" href="" />
+<style>
+.slider {
+    position: relative;
+    overflow: hidden;
+    width: 100px;
+}
+.slide:not(:first-child) {
+    display: none;
+}
+.slides {
+    overflow: hidden;
+    width: 300px;
+}
+.slide {
+    width: 100px;
+    height: 100px;
+    float: left;
+}
+.slide-1 {
+    background-color: red;
+}
+.slide-2 {
+    background-color: blue;
+    display: none;
+}
+.slide-3 {
+    background-color: green;
+}
+.slide-4 {
+    background-color: yellow;
+}
+.active {
+    text-decoration: underline;
+}
+</style>
+</head>
+
+<body>
+
+<div class='slider'>
+    <div class="slides">
+        <div class="slide-1 slide"></div>
+        <div class="slide-2 slide"></div>
+        <div class="slide-3 slide"></div>
+        <div class="slide-4 slide"></div>
+    </div>
+</div>
+
+<!--ul class="pagination">
+    <li>Red</li>
+    <li>Blue</li>
+    <li>Green</li>
+</ul-->
+
+<div style="clear: both"></div>
+
+<a href="#" class="previous">Previous</a>
+<a href="#" class="next">Next</a>
+
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
+<script type="text/javascript" src="slider.js"></script>
+<script type="text/javascript">
+$(document).ready(function () {
+    slider.auto = true;
+    slider.hide = true;
+    slider.init();
+});
+</script>
+
+</body>
+</html>
+
