@@ -14,7 +14,11 @@ var slider = {
     timeout_duration: 1000,
     callback: {},
     auto: false,
-    key: true,
+    key: {
+        enable: true,
+        previous: [37,27],
+        next: [39]
+    },
     hide: true,
 
     init: function () {
@@ -41,12 +45,15 @@ var slider = {
             slider.bind.previous();
         })
 
-        if (slider.key) {
-            $(document).keyup(function (e) {
-                if (e.keyCode == 27) {
+        if (slider.key.enable) {
+            document.addEventListener('keydown',function (e) {
+                if (slider.key.previous && slider.key.previous.indexOf(e.keyCode) !== -1) {
                     slider.bind.previous();
                 }
-            });
+                if (slider.key.next && slider.key.next.indexOf(e.keyCode) !== -1) {
+                    slider.bind.next();
+                }
+            }, false);
         }
 
         // Pagination
