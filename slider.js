@@ -16,7 +16,7 @@ var slider = {
     auto: false,
     key: {
         enable: true,
-        previous: [37,27],
+        previous: [37],
         next: [39]
     },
     hide: true,
@@ -46,14 +46,9 @@ var slider = {
         })
 
         if (slider.key.enable) {
-            document.addEventListener('keydown',function (e) {
-                if (slider.key.previous && slider.key.previous.indexOf(e.keyCode) !== -1) {
-                    slider.bind.previous();
-                }
-                if (slider.key.next && slider.key.next.indexOf(e.keyCode) !== -1) {
-                    slider.bind.next();
-                }
-            }, false);
+            $(document).bind('keydown', slider.bind.keys);
+            $('input, textarea').focus(function() { $(document).unbind('keydown'); });
+            $('input, textarea').blur(function() { $(document).bind('keydown', slider.bind.keys); });
         }
 
         // Pagination
@@ -81,6 +76,14 @@ var slider = {
             slider.previous();
             slider.callback.previous && slider.callback.previous();
             return false;
+        },
+        keys: function (e) {
+            if (slider.key.previous.indexOf(e.keyCode) !== -1) {
+                slider.bind.previous();
+            }
+            if (slider.key.next && slider.key.next.indexOf(e.keyCode) !== -1) {
+                slider.bind.next();
+            }
         }
     },
     place: function (i) {
