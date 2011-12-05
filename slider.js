@@ -67,14 +67,14 @@ var slider = {
             clearInterval(slider.timeout);
             slider.loop();
             slider.next();
-            slider.callback.next && slider.callback.next();
+            slider.callback.next && slider.callback.next(slider);
             return false;
         },
         previous: function () {
             clearInterval(slider.timeout);
             slider.loop();
             slider.previous();
-            slider.callback.previous && slider.callback.previous();
+            slider.callback.previous && slider.callback.previous(slider);
             return false;
         },
         keys: function (e) {
