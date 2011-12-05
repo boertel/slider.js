@@ -106,7 +106,7 @@ var slider = {
         }
         if (slider.elements.pagination.length !== 0) {
             slider.elements.pagination.children().removeClass(slider.active);
-            slider.elements.pagination.children()[current].className = slider.active;
+            $(slider.elements.pagination.children()[current]).addClass(slider.active);
         }
         return current;
     },
