@@ -39,10 +39,10 @@ var slider = {
         slider.place(slider.current);
         // Previous / Next buttons
         slider.elements.next.click(function () {
-            slider.bind.next();
+            return slider.bind.next();
         });
         slider.elements.previous.click(function () {
-            slider.bind.previous();
+            return slider.bind.previous();
         })
 
         if (slider.key.enable) {
@@ -56,6 +56,7 @@ var slider = {
             $(this).click(function () {
                 slider.current = slider.place(i);
                 slider.animate({marginLeft: -slider.positions[slider.current]}); 
+                return false;
             });
         });
         
