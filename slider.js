@@ -64,19 +64,21 @@ var slider = {
         slider.loop();
     },
     bind: {
-        next: function () {
+        move: function (name) {
+            var cb = true;
             clearInterval(slider.timeout);
             slider.loop();
-            slider.next();
-            slider.callback.next && slider.callback.next(slider);
+            slider.callback[name] && (cb = slider.callback[name]());
+            if (cb) {
+                slider[name]();
+            }
             return false;
         },
+        next: function () {
+            return slider.bind.move('next');
+        },
         previous: function () {
-            clearInterval(slider.timeout);
-            slider.loop();
-            slider.previous();
-            slider.callback.previous && slider.callback.previous(slider);
-            return false;
+            return slider.bind.move('previous');
         },
         keys: function (e) {
             if (slider.key.previous.indexOf(e.keyCode) !== -1) {
