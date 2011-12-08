@@ -97,8 +97,10 @@ var slider = {
         }
         else {
             current = i;
-            slider.elements.next.show();
-            slider.elements.previous.show();
+            if (slider.hide) {
+                slider.elements.next.show();
+                slider.elements.previous.show();
+            }
         }
 
         if (i >= slider.length-1 && slider.hide) {
