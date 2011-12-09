@@ -37,6 +37,7 @@ var slider = {
         slider.elements.container.width(slider.width);
 
         slider.place(slider.current);
+        slider.animate();
         // Previous / Next buttons
         slider.elements.next.click(function () {
             return slider.bind.next();
@@ -128,19 +129,25 @@ var slider = {
         var old = slider.current;
         slider.current = slider.place(old+1);
         if (slider.current !== old) {
-            slider.animate({marginLeft: -slider.positions[slider.current]});
+            slider.animate();
         } 
     },
     previous: function () {
         var old = slider.current;
         slider.current = slider.place(old-1);
         if (slider.current !== old) {
-            slider.animate({marginLeft: -slider.positions[slider.current]});
+            slider.animate();
         } else {
             slider.elements.previous.hide();
         }
     },
-    animate: function (arg) {
-        slider.elements.container.stop().animate(arg, slider.duration);
+    animate: function (animate) {
+        var args = {marginLeft: -slider.positions[slider.current]};
+        if (animate) {
+            slider.elements.container.stop().animate(args, slider.duration);
+        }
+        else {
+            slider.elements.container.css(args);
+        }
     }
 };
