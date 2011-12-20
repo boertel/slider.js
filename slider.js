@@ -24,7 +24,7 @@ var slider = {
     init: function () {
         slider.elements.container.find('.slide').each(function (i) {
             slider.positions[i] = slider.width;
-            slider.width += $(this).width();
+            slider.width += $(this).outerWidth();
         });
         if (slider.elements.pagination.children().length !== 0) {
             slider.length = slider.elements.pagination.children().length;
