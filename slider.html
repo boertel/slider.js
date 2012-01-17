@@ -69,10 +69,21 @@
 <script type="text/javascript" src="slider.js"></script>
 <script type="text/javascript">
 $(document).ready(function () {
+    $('.slides').slider({
+        auto: false,
+        hide: true,
+        key: {
+            previous: [27],
+            next: []
+        },
+        current: 1
+    });
+    /*
     slider.auto = false;
     slider.hide = true;
     slider.current = 1;
     slider.init();
+    */
 });
 </script>
 
