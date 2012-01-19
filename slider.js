@@ -23,6 +23,9 @@ var slider = {
 
     init: function () {
         slider.width = 0;
+        slider.current = 0;
+        slider.length = 0;
+
         slider.elements.container.find('.slide').each(function (i) {
             slider.positions[i] = slider.width;
             slider.width += $(this).outerWidth();
