@@ -52,9 +52,9 @@ var slider = {
         })
 
         if (slider.key.enable) {
-            $(document).bind('keydown', slider.bind.keys);
+            $(document).unbind().bind('keydown', slider.bind.keys);
             $('input, textarea').focus(function() { $(document).unbind('keydown'); });
-            $('input, textarea').blur(function() { $(document).bind('keydown', slider.bind.keys); });
+            $('input, textarea').blur(function() { $(document).unbind().bind('keydown', slider.bind.keys); });
         }
 
         // Pagination
