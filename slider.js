@@ -146,7 +146,7 @@ var slider = {
             slider.elements.previous.hide();
         }
     },
-    animate: function () {
+    animate: function (animate) {
         var args = {marginLeft: -slider.positions[slider.current]};
         if (typeof animate !== undefined) {
             slider.elements.container.stop().animate(args, slider.duration);
