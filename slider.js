@@ -23,7 +23,12 @@
             },
             hide: true,
 
-            init: function () {
+            init: function (container) {
+                if (typeof container !== undefined) {
+                    slider.elements.container = $('.slides', container);
+                    slider.elements.next = $('.next', container);
+                    slider.elements.previous = $('.previous', container);
+                }
                 slider.width = 0;
                 slider.current = 0;
                 slider.length = 0;
@@ -54,9 +59,9 @@
                 })
 
                 if (slider.key.enable) {
-                    $(document).bind('keydown', slider.bind.keys);
+                    $(document).unbind().bind('keydown', slider.bind.keys);
                     $('input, textarea').focus(function() { $(document).unbind('keydown'); });
-                    $('input, textarea').blur(function() { $(document).bind('keydown', slider.bind.keys); });
+                    $('input, textarea').blur(function() { $(document).unbind().bind('keydown', slider.bind.keys); });
                 }
 
                 // Pagination
@@ -173,7 +178,9 @@
         
         merge(slider, args);
 
-        slider.init();
+        $(this).each(function () {
+            slider.init($(this));
+        });
     };
 })(jQuery);
 
