@@ -24,6 +24,11 @@
             hide: true,
 
             init: function () {
+                slider.width = 0;
+                slider.current = 0;
+                slider.length = 0;
+                slider.positions = [];
+
                 slider.elements.container.find('.slide').each(function (i) {
                     slider.positions[i] = slider.width;
                     slider.width += $(this).outerWidth();
@@ -58,7 +63,7 @@
                 slider.elements.pagination.children().each(function (i) {
                     $(this).click(function () {
                         slider.current = slider.place(i);
-                        slider.animate({marginLeft: -slider.positions[slider.current]}); 
+                        slider.animate(); 
                         return false;
                     });
                 });
@@ -145,7 +150,7 @@
             },
             animate: function (animate) {
                 var args = {marginLeft: -slider.positions[slider.current]};
-                if (animate) {
+                if (typeof animate !== undefined) {
                     slider.elements.container.stop().animate(args, slider.duration);
                 }
                 else {
@@ -171,3 +176,4 @@
         slider.init();
     };
 })(jQuery);
+
