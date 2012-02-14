@@ -21,7 +21,12 @@ var slider = {
     },
     hide: true,
 
-    init: function () {
+    init: function (container) {
+        if (typeof container !== undefined) {
+            slider.elements.container = $('.slides', container);
+            slider.elements.next = $('.next', container);
+            slider.elements.previous = $('.previous', container);
+        }
         slider.width = 0;
         slider.current = 0;
         slider.length = 0;
@@ -75,7 +80,7 @@ var slider = {
             clearInterval(slider.timeout);
             slider.loop();
             slider.callback[name] && (cb = slider.callback[name]());
-            if (cb) {
+            if (cb !== false) {
                 slider[name]();
             }
             return false;
@@ -156,3 +161,4 @@ var slider = {
         }
     }
 };
+
