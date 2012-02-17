@@ -85,7 +85,7 @@ Slider.prototype.move = function (name) {
     return false;
 };
 Slider.prototype.keys = function (e) {
-    if (this.key.previous.indexOf(e.keyCode) !== -1) {
+    if (this.key.previous && this.key.previous.indexOf(e.keyCode) !== -1) {
         this.move('previous');
     }
     if (this.key.next && this.key.next.indexOf(e.keyCode) !== -1) {

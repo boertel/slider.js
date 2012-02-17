@@ -2,7 +2,6 @@
 <html>
 <head>
 	<title></title>
-    <link rel="stylesheet" type="text/css" href="" />
 <style>
 .slider {
     position: relative;
@@ -78,15 +77,16 @@
 
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
 <script type="text/javascript" src="slider.js"></script>
+
 <script type="text/javascript">
-$(document).ready(function () {
-    var s = new Slider({
-        container: $("#slider1")
+    $(document).ready(function () {
+        var s = new Slider({
+            container: $("#slider1")
+        });
+        var s2 = new Slider({
+            container: $("#slider2")
+        });
     });
-    var s2 = new Slider({
-        container: $("#slider2")
-    });
-});
 </script>
 
 </body>
