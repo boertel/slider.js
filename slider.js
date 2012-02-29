@@ -35,11 +35,8 @@ var Slider = function (args) {
         that.width += $(this).outerWidth();
     });
 
-    if (this.elements.pagination.children().length !== 0) {
-        this.length = this.elements.pagination.children().length;
-    } else {
-        this.length = this.positions.length;
-    }
+    this.length = this.positions.length;
+
     this.elements.container.find(".slide").show();
     // Best to define the width of the container in CSS: it takes time to do it in js.
     this.elements.container.width(this.width);
@@ -124,7 +121,7 @@ Slider.prototype.loop = function () {
             that.current = (that.current == that.length-1) ? -1: that.current;
             that.next();
             that.loop();
-        }, this.timeout_duration);
+        }, this.timeoutDuration);
     }
 };
 Slider.prototype.next = function () {
