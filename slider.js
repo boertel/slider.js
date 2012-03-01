@@ -87,7 +87,6 @@ Slider.prototype.move = function (name) {
     this.loop();
 
     run = this.onBeforeMove && this.onBeforeMove(this);
-    console.log(run);
     if (run !== false) {
         this[name]();
         this.onMove && this.onMove(this);
