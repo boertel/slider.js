@@ -64,9 +64,9 @@
 </div>
 
 <ul class="pagination">
-    <li class="page">Red</li>
-    <li class="page">Blue</li>
-    <li>Green</li>
+    <li class="page">Red : 0</li>
+    <li class="page">Blue : 1</li>
+    <li>Green : 2</li>
 </ul>
 
 <div style="clear: both"></div>
@@ -79,36 +79,34 @@
 <script type="text/javascript" src="slider.js"></script>
 
 <script type="text/javascript">
-    $(document).ready(function () {
-        var s = new Slider({
-            container: $("#slider1"),
-            onNext: function (that) {
-                console.log("next", that.current);
-            },
-            onPrevious: function (that) {
-                console.log("previous", that.current);
-            },
-            onBeforeNext: function (that) {
-                console.log("before next", that.current);
-                //return false;
-            },
-            onBeforePrevious: function (that) {
-                console.log("before previous", that.current);
-                //return false;
-            },
-            onMove: function (that) {
-                console.log("move", that.current);
-            },
-            onBeforeMove: function (that) {
-                console.log("before move", that.current);
-                //return false;
-            }
-        });
-        /*
-        var s2 = new Slider({
-            container: $("#slider2")
-        });*/
+    var s = new Slider({
+        container: $("#slider1"),
+        onNext: function (that) {
+            console.log("next", that.current);
+        },
+        onPrevious: function (that) {
+            console.log("previous", that.current);
+        },
+        onBeforeNext: function (that) {
+            console.log("before next", that.current);
+            //return false;
+        },
+        onBeforePrevious: function (that) {
+            console.log("before previous", that.current);
+            //return false;
+        },
+        onMove: function (that) {
+            console.log("move", that.current);
+        },
+        onBeforeMove: function (that) {
+            console.log("before move", that.current);
+            //return false;
+        }
     });
+    /*
+    var s2 = new Slider({
+        container: $("#slider2")
+    });*/
 </script>
 
 </body>
