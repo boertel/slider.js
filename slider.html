@@ -82,11 +82,32 @@
     $(document).ready(function () {
         var s = new Slider({
             container: $("#slider1"),
-            auto: true
+            onNext: function (that) {
+                console.log("next", that.current);
+            },
+            onPrevious: function (that) {
+                console.log("previous", that.current);
+            },
+            onBeforeNext: function (that) {
+                console.log("before next", that.current);
+                //return false;
+            },
+            onBeforePrevious: function (that) {
+                console.log("before previous", that.current);
+                //return false;
+            },
+            onMove: function (that) {
+                console.log("move", that.current);
+            },
+            onBeforeMove: function (that) {
+                console.log("before move", that.current);
+                //return false;
+            }
         });
+        /*
         var s2 = new Slider({
             container: $("#slider2")
-        });
+        });*/
     });
 </script>
 

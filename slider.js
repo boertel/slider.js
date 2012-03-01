@@ -9,16 +9,28 @@ var Slider = function (args) {
         next: $('.next'),
         previous: $('.previous')
     };
+    // css class used for the current page
     this.active = args.active || 'active';
     this.duration = args.duration || 450;
     this.timeoutDuration = args.timeoutDuration || 1000;
-    this.callback = args.callback || {};
     this.auto = args.auto || false;
+
+    // callback functions
+    this.onNext = args.onNext;
+    this.onBeforeNext = args.onBeforeNext;
+    this.onPrevious = args.onPrevious;
+    this.onBeforePrevious = args.onBeforePrevious;
+    this.onMove = args.onMove;
+    this.onBeforeMove = args.onBeforeMove;
+
+    // Keyboard shortcuts
     this.key = args.key || {
         enable: true,
         previous: [37],
         next: [39]
     };
+
+    // Hide next/previous buttons
     this.hide = args.hide || true;
 
     var that = this;
@@ -70,15 +82,17 @@ var Slider = function (args) {
     this.loop();
 };
 Slider.prototype.move = function (name) {
-    var cb = true;
+    var run = true;
     clearInterval(this.timeout);
     this.loop();
-    if (this.callback[name] !== undefined) {
-        cb = this.callback[name]();
-    }
-    if (cb !== false) {
+
+    run = this.onBeforeMove && this.onBeforeMove(this);
+    console.log(run);
+    if (run !== false) {
         this[name]();
+        this.onMove && this.onMove(this);
     }
+
     return false;
 };
 Slider.prototype.keys = function (e) {
@@ -125,16 +139,30 @@ Slider.prototype.loop = function () {
     }
 };
 Slider.prototype.next = function () {
-    var old = this.current;
-    this.current = this.place(old + 1);
-    if (this.current !== old) {
+    var run = this.onBeforeNext && this.onBeforeNext(this);
+    if (run === false) {
+        return false;
+    }
+
+    var next = this.place(this.current + 1);
+
+    if (next !== this.current) {
+        this.current = next;
+        this.onNext && this.onNext(this);
         this.animate();
     } 
 };
 Slider.prototype.previous = function () {
-    var old = this.current;
-    this.current = this.place(old-1);
-    if (this.current !== old) {
+    var run = this.onBeforePrevious && this.onBeforePrevious(this);
+    if (run === false) {
+        return false;
+    }
+
+    var previous = this.place(this.current - 1);
+
+    if (previous !== this.current) {
+        this.current = previous;
+        this.onPrevious && this.onPrevious(this);
         this.animate();
     } else {
         this.elements.previous.hide();
