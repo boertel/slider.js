@@ -88,10 +88,13 @@ Slider.prototype.move = function (name) {
     clearInterval(this.timeout);
     this.loop();
 
+    var before = this.current;
     run = this.onBeforeMove && this.onBeforeMove(this);
     if (run !== false) {
         this[name]();
-        this.onMove && this.onMove(this);
+        if (before !== this.current) {
+            this.onMove && this.onMove(this);
+        }
     }
 
     return false;
