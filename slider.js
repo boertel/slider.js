@@ -42,17 +42,19 @@ var Slider = function (args) {
         this.elements.pagination = args.pagination || $(".pagination");
     }
 
+    // TODO find only the children > .slide
     this.elements.container.find('.slide').each(function (i) {
         that.positions[i] = that.width;
         that.width += $(this).outerWidth();
     });
+    this.elements.container.width(this.width);
 
+    // Number of slides
     this.length = this.positions.length;
 
     this.elements.container.find(".slide").show();
-    // Best to define the width of the container in CSS: it takes time to do it in js.
-    this.elements.container.width(this.width);
 
+    // positionate the slider to a certain slide
     this.place(this.current);
     this.animate();
     // Previous / Next buttons
@@ -138,6 +140,7 @@ Slider.prototype.loop = function () {
     }
 };
 Slider.prototype.next = function () {
+    // onBefore returns false, stop the execution of the move
     var run = this.onBeforeNext && this.onBeforeNext(this);
     if (run === false) {
         return false;
