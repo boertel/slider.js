@@ -100,7 +100,7 @@ Slider.prototype.remove = function (i) {
     }
     removed = $(this.elements.container.find(".slide")[i]).remove();
     this.parse();
-    this.place(0);
+    this.current = this.place(0);
     this.animate(false);
 };
 Slider.prototype.move = function (name) {
@@ -210,3 +210,15 @@ Slider.prototype.animate = function (animate) {
     }
     this.onAnimate && this.onAnimate.call(this);
 };
+
+if (!Array.indexOf) {
+    Array.prototype.indexOf = function (obj) {
+        var i = 0;
+        for (i; i < this.length; i += 1) {
+            if (this[i] == obj) {
+                return i;
+            }
+        }
+        return -1;
+    };
+}
