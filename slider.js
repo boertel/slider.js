@@ -1,7 +1,6 @@
 var Slider = function (args) {
-    this.positions = [];
-    this.width = 0;
     this.current = args.current || 0;
+    this.before = 0;
     this.length = 0;
     this.elements = {
         container: $('.slides'),
@@ -22,6 +21,8 @@ var Slider = function (args) {
     this.onBeforePrevious = args.onBeforePrevious;
     this.onMove = args.onMove;
     this.onBeforeMove = args.onBeforeMove;
+    this.onAnimate = args.onAnimate;
+    this.onAfterAnimate = args.onAfterAnimate;
 
     // Keyboard shortcuts
     this.key = args.key || {
@@ -42,21 +43,13 @@ var Slider = function (args) {
         this.elements.pagination = args.pagination || $(".pagination");
     }
 
-    // TODO find only the children > .slide
-    this.elements.container.find('.slide').each(function (i) {
-        that.positions[i] = that.width;
-        that.width += $(this).outerWidth();
-    });
-    this.elements.container.width(this.width);
-
-    // Number of slides
-    this.length = this.positions.length;
+    this.parse();
 
     this.elements.container.find(".slide").show();
 
     // positionate the slider to a certain slide
     this.place(this.current);
-    this.animate();
+    //this.animate();
     // Previous / Next buttons
     this.elements.next.click(function () {
         return that.move("next");
@@ -83,17 +76,44 @@ var Slider = function (args) {
     // Auto advance
     this.loop();
 };
+Slider.prototype.parse = function () {
+    var that = this;
+    // TODO find only the children > .slide
+    this.width = 0;
+    this.positions = [];
+    this.slides = [];
+
+    this.elements.container.find('.slide').each(function (i) {
+        that.slides[i] = this;
+        that.positions[i] = that.width;
+        that.width += $(this).outerWidth();
+    });
+    this.elements.container.width(this.width);
+
+    // Number of slides
+    this.length = this.positions.length;
+};
+Slider.prototype.remove = function (i) {
+    var removed;
+    if (typeof i === "undefined") {
+        i = this.current;
+    }
+    removed = $(this.elements.container.find(".slide")[i]).remove();
+    this.parse();
+    this.place(0);
+    this.animate(false);
+};
 Slider.prototype.move = function (name) {
     var run = true;
     clearInterval(this.timeout);
     this.loop();
 
-    var before = this.current;
-    run = this.onBeforeMove && this.onBeforeMove(this);
+    this.before = this.current;
+    run = this.onBeforeMove && this.onBeforeMove.call(this);
     if (run !== false) {
         this[name]();
-        if (before !== this.current) {
-            this.onMove && this.onMove(this);
+        if (this.before !== this.current) {
+            this.onMove && this.onMove.call(this);
         }
     }
 
@@ -142,9 +162,9 @@ Slider.prototype.loop = function () {
         }, this.timeoutDuration);
     }
 };
-Slider.prototype.next = function () {
+Slider.prototype.next = function (animate) {
     // onBefore returns false, stop the execution of the move
-    var run = this.onBeforeNext && this.onBeforeNext(this);
+    var run = this.onBeforeNext && this.onBeforeNext.call(this);
     if (run === false) {
         return false;
     }
@@ -153,12 +173,12 @@ Slider.prototype.next = function () {
 
     if (next !== this.current) {
         this.current = next;
-        this.onNext && this.onNext(this);
-        this.animate();
+        this.onNext && this.onNext.call(this);
+        this.animate.call(this, animate);
     } 
 };
-Slider.prototype.previous = function () {
-    var run = this.onBeforePrevious && this.onBeforePrevious(this);
+Slider.prototype.previous = function (animate) {
+    var run = this.onBeforePrevious && this.onBeforePrevious.call(this);
     if (run === false) {
         return false;
     }
@@ -167,17 +187,26 @@ Slider.prototype.previous = function () {
 
     if (previous !== this.current) {
         this.current = previous;
-        this.onPrevious && this.onPrevious(this);
-        this.animate();
+        this.onPrevious && this.onPrevious.call(this);
+        this.animate.call(this, animate);
     } else {
         this.elements.previous.hide();
     }
 };
 Slider.prototype.animate = function (animate) {
-    var args = {marginLeft: -this.positions[this.current]};
-    if (typeof animate !== undefined) {
-        this.elements.container.stop().animate(args, this.duration);
+    var args = {
+        marginLeft: -this.positions[this.current]
+    };
+    if (typeof animate === "undefined" || animate === true) {
+        var that = this;
+        this.elements.container.stop().animate(args, {
+                duration: this.duration,
+                complete: function () {
+                    that.onAfterAnimate && that.onAfterAnimate.call(that);
+                }
+        });
     } else {
         this.elements.container.css(args);
     }
+    this.onAnimate && this.onAnimate.call(this);
 };

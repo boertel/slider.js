@@ -3,6 +3,10 @@
 <head>
 	<title>Slider.js</title>
 <style>
+body {
+    margin: 20px auto;
+    width: 760px;
+}
 .slider {
     position: relative;
     overflow: hidden;
@@ -81,26 +85,32 @@
 <script type="text/javascript">
     var s = new Slider({
         container: $("#slider1"),
-        onNext: function (that) {
-            console.log("next", that.current);
+        duration: 3000,
+        onNext: function () {
+            console.log("next", this.current);
         },
-        onPrevious: function (that) {
-            console.log("previous", that.current);
+        onPrevious: function () {
+            console.log("previous", this.current);
         },
-        onBeforeNext: function (that) {
-            console.log("before next", that.current);
+        onBeforeNext: function () {
+            console.log("before next", this.current);
             //return false;
         },
-        onBeforePrevious: function (that) {
-            console.log("before previous", that.current);
+        onBeforePrevious: function () {
+            console.log("before previous", this.current);
             //return false;
         },
-        onMove: function (that) {
-            console.log("move", that.current);
+        onMove: function () {
+            console.log("move", this.current);
         },
-        onBeforeMove: function (that) {
-            console.log("before move", that.current);
+        onBeforeMove: function () {
+            console.log("before move", this.current);
             //return false;
+        },
+        onAfterAnimate: function () {
+            console.log("after animate");
+            this.remove(this.before);
+            //this.current -= 1;
         }
     });
     /*
