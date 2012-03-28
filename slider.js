@@ -24,7 +24,7 @@ var Slider = function (args) {
     this.onAnimate = args.onAnimate;
     this.onAfterAnimate = args.onAfterAnimate;
 
-    this.property = "width";
+    this.property = args.property || "width";
     this.computeProperty = {
         width: "outerWidth",
         height: "outerHeight"
@@ -44,7 +44,10 @@ var Slider = function (args) {
     // Hide next/previous buttons
     this.hide = args.hide || true;
 
+    // Core
     var that = this;
+
+    this.updateCss();
 
     if (args.container !== undefined) {
         this.elements.container = $('.slides', args.container);
@@ -85,6 +88,12 @@ var Slider = function (args) {
     
     // Auto advance
     this.loop();
+};
+Slider.prototype.updateCss = function () {
+    if (this.property === "width") {
+        this.elements.container.find('.slide').css("float", "left");
+    } else {
+    }
 };
 Slider.prototype.parse = function () {
     var that = this;

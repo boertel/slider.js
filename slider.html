@@ -7,23 +7,18 @@ body {
     margin: 20px auto;
     width: 760px;
 }
+
+/* Specific to slider.js */
+.slider, .slide {
+    width: 100px;
+    height: 100px;
+}
 .slider {
     position: relative;
     overflow: hidden;
-    width: 100px;
 }
-.slide:not(:first-child) {
-    display: none;
-}
-.slides {
-    overflow: hidden;
-    width: 300px;
-}
-.slide {
-    width: 100px;
-    height: 100px;
-    float: left;
-}
+/* end here */
+
 .slide-1 {
     background-color: red;
 }
@@ -110,9 +105,10 @@ body {
             console.log("after animate");
         }
     });
+    /*
     var s2 = new Slider({
         container: $("#slider2")
-    });
+    });*/
 </script>
 
 </body>
