@@ -24,6 +24,16 @@ var Slider = function (args) {
     this.onAnimate = args.onAnimate;
     this.onAfterAnimate = args.onAfterAnimate;
 
+    this.property = "width";
+    this.computeProperty = {
+        width: "outerWidth",
+        height: "outerHeight"
+    };
+    this.animateProperty = {
+        width: "marginLeft",
+        height: "marginTop"
+    };
+
     // Keyboard shortcuts
     this.key = args.key || {
         enable: true,
@@ -79,16 +89,16 @@ var Slider = function (args) {
 Slider.prototype.parse = function () {
     var that = this;
     // TODO find only the children > .slide
-    this.width = 0;
+    this[this.property] = 0;
     this.positions = [];
     this.slides = [];
 
     this.elements.container.find('.slide').each(function (i) {
         that.slides[i] = this;
-        that.positions[i] = that.width;
-        that.width += $(this).outerWidth();
+        that.positions[i] = that[that.property];
+        that[that.property] += $(this)[that.computeProperty[that.property]]();
     });
-    this.elements.container.width(this.width);
+    this.elements.container[this.property](this[this.property]);
 
     // Number of slides
     this.length = this.positions.length;
@@ -194,9 +204,10 @@ Slider.prototype.previous = function (animate) {
     }
 };
 Slider.prototype.animate = function (animate) {
-    var args = {
-        marginLeft: -this.positions[this.current]
-    };
+    var key = this.animateProperty[this.property];
+    var args = {};
+    args[key] = -this.positions[this.current];
+
     if (typeof animate === "undefined" || animate === true) {
         var that = this;
         this.elements.container.stop().animate(args, {
