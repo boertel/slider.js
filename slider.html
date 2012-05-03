@@ -80,6 +80,9 @@ body {
 <script type="text/javascript">
     var s = new Slider({
         container: $("#slider1"),
+        property: "width",
+        current: 1,
+        auto: false,
         onNext: function () {
             console.log("next", this.current);
         },

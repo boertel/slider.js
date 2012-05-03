@@ -62,7 +62,8 @@ var Slider = function (args) {
 
     // positionate the slider to a certain slide
     this.place(this.current);
-    //this.animate();
+    this.animate(false);
+
     // Previous / Next buttons
     this.elements.next.click(function () {
         return that.move("next");
