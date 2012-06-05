@@ -3,7 +3,7 @@ var Slider = function (args) {
     this.before = 0;
     this.length = 0;
     this.elements = {
-        container: $('.slides'),
+        slides: $('.slides'),
         pagination: $('.pagination'),
         next: $('.next'),
         previous: $('.previous')
@@ -50,7 +50,8 @@ var Slider = function (args) {
     this.updateCss();
 
     if (args.container !== undefined) {
-        this.elements.container = $('.slides', args.container);
+        args.container.css('overflow', 'hidden');
+        this.elements.slides = $('.slides', args.container);
         this.elements.next = $('.next', args.container);
         this.elements.previous = $('.previous', args.container);
         this.elements.pagination = args.pagination || $(".pagination");
@@ -58,7 +59,7 @@ var Slider = function (args) {
 
     this.parse();
 
-    this.elements.container.find(".slide").show();
+    this.elements.slides.find(".slide").show();
 
     // positionate the slider to a certain slide
     this.place(this.current);
@@ -92,7 +93,7 @@ var Slider = function (args) {
 };
 Slider.prototype.updateCss = function () {
     if (this.property === "width") {
-        this.elements.container.find('.slide').css("float", "left");
+        this.elements.slides.find('.slide').css("float", "left");
     } else {
     }
 };
@@ -103,12 +104,12 @@ Slider.prototype.parse = function () {
     this.positions = [];
     this.slides = [];
 
-    this.elements.container.find('.slide').each(function (i) {
+    this.elements.slides.find('.slide').each(function (i) {
         that.slides[i] = this;
         that.positions[i] = that[that.property];
         that[that.property] += $(this)[that.computeProperty[that.property]]();
     });
-    this.elements.container[this.property](this[this.property]);
+    this.elements.slides[this.property](this[this.property]);
 
     // Number of slides
     this.length = this.positions.length;
@@ -118,7 +119,7 @@ Slider.prototype.remove = function (i) {
     if (typeof i === "undefined") {
         i = this.current;
     }
-    removed = $(this.elements.container.find(".slide")[i]).remove();
+    removed = $(this.elements.slides.find(".slide")[i]).remove();
     this.parse();
     this.current = this.place(0);
     this.animate(false);
@@ -220,14 +221,14 @@ Slider.prototype.animate = function (animate) {
 
     if (typeof animate === "undefined" || animate === true) {
         var that = this;
-        this.elements.container.stop().animate(args, {
+        this.elements.slides.stop().animate(args, {
                 duration: this.duration,
                 complete: function () {
                     that.onAfterAnimate && that.onAfterAnimate.call(that);
                 }
         });
     } else {
-        this.elements.container.css(args);
+        this.elements.slides.css(args);
     }
     this.onAnimate && this.onAnimate.call(this);
 };
