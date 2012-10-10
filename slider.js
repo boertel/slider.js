@@ -8,6 +8,13 @@
                 computedStyle = document.defaultView.getComputedStyle(el, null);
             }
             return computedStyle[style];
+        },
+        getElementsByClassName: function (classname, node) {
+            node = node || document.body;
+            return node.getElementsByClassName(classname);
+        },
+        indexOf: function (array, search) {
+            return array.indexOf(search);
         }
     },
     property = {
@@ -46,43 +53,44 @@
             next = args.shift();
         }
 
-        this.index = params.index || 0;     // index of the current slide
+        this.index = params.index || 0;     // index of the current slide [0]
         this.current = undefined;           // html object of the current slide
-        this.length = 0;                    // number of slides
-        this.loop = params.loop || false;   // is the slider looping?
-        this.hide = (params.hide === false) ? false : true; // hide previous or next when first or last
-        this.property = (params.property === "height") ? "height" : "width";
+        this.length = 0;                    // number of slides [0]
+        this.loop = params.loop || false;   // is the slider looping? [false]
+        this.hide = (params.hide === false) ? false : true;     // hide previous or next when first or last [true]
+        this.property = (params.property === "height") ? "height" : "width";    // up/down or right/left [width]
 
-        this.animation = (params.animation === false || !$) ? false : true;
+        this.animation = (params.animation === false || !$) ? false : true;     // animate the slider using jquery if it's there [true]
         params.duration = params.duration || {};
         this.duration = {
-            timeout: undefined,
-            effect: params.duration.effect || 450,
-            pause: params.duration.pause || 1000
+            timeout: undefined,                       // timer for the loop 
+            animation: params.duration.effect || 450, // duration of the animation
+            pause: params.duration.pause || 1000      // duration of the pause between each loop
         };
 
         params.node = params.node || {};
-        params.node.wrapper = params.node.wrapper || wrapper;
+        params.node.wrapper = params.node.wrapper || params.wrapper || wrapper; // shortcut for the wrapper
         this.node = {
-            wrapper: params.node.wrapper,
-            slides: undefined,
-            slide: undefined,
-            pagination: params.node.pagination,
-            next: params.node.next,
-            previous: params.node.previous
+            wrapper: params.node.wrapper,       // where all default nodes are
+            slides: undefined,                  // container of slides
+            slide: undefined,                   // all slides
+            pagination: params.node.pagination, // container of pages
+            page: undefined,                    // all pages
+            next: params.node.next,             // next html element
+            previous: params.node.previous      // previous html element
         };
         this.findNodes();
 
-        this.positions = [];
+        this.positions = [];    // How much should the slider slides for each slide?
 
         params.key = params.key || {};
         this.key = {
-            enable: (params.key.enable === false) ? false : true,
-            previous: params.key.previous || property[this.property].key.previous,
-            next: params.key.next || property[this.property].key.next
+            enable: (params.key.enable === false) ? false : true,                   // are the keydown shortcuts enable?
+            previous: params.key.previous || property[this.property].key.previous,  // shortcuts for previous
+            next: params.key.next || property[this.property].key.next               // shortcuts for next
         };
 
-        this.run();
+        this.run();     // Let's start the slider
     }
 
     Slider.prototype.run = function () {
@@ -95,26 +103,29 @@
         return this;
     };
 
+    // Initialize nodes with they are not specified
     Slider.prototype.findNodes = function () {
-        this.node.slides = this.node.slides || this.node.wrapper.getElementsByClassName('slides')[0];
-        this.node.slide = this.node.slides.getElementsByClassName("slide");
+        this.node.slides = this.node.slides || util.getElementsByClassName('slides', this.node.wrapper)[0];
+        this.node.slide = util.getElementsByClassName("slide", this.node.slides);
 
         // Optional
-        this.node.pagination = this.node.pagination || this.node.wrapper.getElementsByClassName('pagination')[0];
+        this.node.pagination = this.node.pagination || util.getElementsByClassName('pagination', this.node.wrapper)[0];
         if (this.node.pagination) {
-            this.node.page = this.node.pagination.getElementsByClassName('page');
+            this.node.page = util.getElementsByClassName('page', this.node.pagination);
         } else {
             this.node.page = [];
         }
 
-        this.node.next = this.node.next || this.node.wrapper.getElementsByClassName('next')[0];
-        this.node.previous = this.node.previous || this.node.wrapper.getElementsByClassName('previous')[0];
+        this.node.next = this.node.next || util.getElementsByClassName('next', this.node.wrapper)[0] || {};
+        this.node.previous = this.node.previous || util.getElementsByClassName('previous', this.node.wrapper)[0] || {};
     };
 
+    // Define css for nodes
     Slider.prototype.css = function () {
         this.node.wrapper.style.overflow = "hidden";
     };
 
+    // Parse slides and extract information
     Slider.prototype.parse = function () {
         var slide, value,
             sum = 0;
@@ -129,44 +140,56 @@
             }
             value = parseInt(util.getComputedStyle(slide, this.property))
             this.positions.push(sum);
-            // TODO include padding, margin ?
             sum += value;
         }
         this[this.property] = sum;
         this.node.wrapper.style[this.property] = value + "px";
+        // Initialize the container of slides with the sum of width/height of all slides
         this.node.slides.style[this.property] = sum + "px";
     };
 
+    // Update pagination elements after moving
     Slider.prototype.pagination = function () {
-        var i, page, classname,
+        var i, page, classname, length
             that = this;
 
+        // next and previous elements
         if (this.hide !== false) {
-            if (this.first) {
-                this.node.previous.style.display = "none";
-            } else {
-                this.node.previous.style.display = "block";
+            if (this.node.previous.style) {
+                if (this.first) {
+                    this.node.previous.style.display = "none";
+                } else {
+                    this.node.previous.style.display = "block";
+                }
             }
 
-            if (this.last) {
-                this.node.next.style.display = "none";
-            } else {
-                this.node.next.style.display = "block";
+            if (this.node.next.style) {
+                if (this.last) {
+                    this.node.next.style.display = "none";
+                } else {
+                    this.node.next.style.display = "block";
+                }
             }
         }
 
-        for (var i = 0; i < this.node.page.length; i += 1) {
-            classname = this.node.page[i].className;
-            this.node.page[i].className = classname.replace(' current', '');
-            
+        // pages
+        length = this.node.page.length;
+        if (length > 0) {
+            for (var i = 0; i < length; i += 1) {
+                classname = this.node.page[i].className;
+                this.node.page[i].className = classname.replace(' current', '');
+                
+            }
+            this.node.page[this.index].className += " current";
         }
-        this.node.page[this.index].className += " current";
     };
     
+    // Bind elements with actions
     Slider.prototype.bind = function () {
         var that = this,
             previous_onkeydown = document.onkeydown;
 
+        // next and previous elements
         this.node.next.onclick = function () {
             that.next();
         };
@@ -175,19 +198,21 @@
             that.previous();
         };
 
+        // keyboard shortcuts
         document.onkeydown = function (e) {
             previous_onkeydown && previous_onkeydown(e);
 
             if (that.key.enable) {
-                if (that.key.next && (that.key.next.indexOf(e.which) !== -1)) {
+                if (that.key.next && (util.indexOf(that.key.next, e.keyCode) !== -1)) {
                     that.next();
                 }
-                if (that.key.previous && (that.key.previous.indexOf(e.which) !== -1)) {
+                if (that.key.previous && (util.indexOf(that.key.previous, e.keyCode) !== -1)) {
                     that.previous();
                 }
             }
         };
 
+        // pages elements
         for (i = 0; i < this.node.page.length; i += 1) {
             page = this.node.page[i];
             page.onclick = function (i) {
@@ -200,12 +225,7 @@
         }
     };
     
-    Slider.prototype.remove = function (i) {
-        var removed = (i === undefined || i < 0 || i > this.length) ? this.current : this.node.slide[i];
-        this.node.slides.removeChild(removed);
-        this.parse();
-    };
-
+    // Resume/start the loop
     Slider.prototype.resume = function () {
         var that = this;
 
@@ -218,10 +238,12 @@
         }
     };
 
+    // Pause the loop
     Slider.prototype.pause = function () {
         window.clearInterval(this.duration.timeout);
     };
 
+    // Move to the next slide
     Slider.prototype.next = function (reset) {
         this.events.trigger('next.before', this);
         this.events.trigger('move.before', this);
@@ -232,6 +254,7 @@
         this.move(reset);
     };
 
+    // Move to the previous slide
     Slider.prototype.previous = function (reset) {
        this.events.trigger('previous.before', this);
        this.events.trigger('move.before', this);
@@ -242,12 +265,14 @@
        this.move(reset);
     };
 
+    // Common behavior the moving action
     Slider.prototype.move = function (reset) {
         var args,
             that = this,
             attribute = property[this.property].style,
             value = - this.positions[this.index];
 
+        // The resume function doesn't resume the loop
         if (reset !== false) {
             this.pause();
             this.resume();
@@ -261,21 +286,24 @@
 
         that.events.trigger('move', this);
 
+        // Animate the slider if asked and jQuery is there
         if (this.animation && $) {
             args = {};
             args[attribute] = value;
             $(this.node.slides).stop().animate(args, {
-                duration: this.duration.effect,
+                duration: this.duration.animation,
                 complete: function () {
                     that.events.trigger('animate.after', that);
                 }
             });
         } else {
+            // Lazy update otherwise
             this.node.slides.style[attribute] = value + "px";
         }
         that.events.trigger('animate', this);
     };
 
+    // Dummy events system
     Slider.prototype.events = {
         _listeners: {},
         bind: function (name, callback) {
@@ -291,6 +319,14 @@
                 this._listeners[name][i].call(message, name);
             }
         }
+    };
+
+    // HELPERS
+    // Remove a slide
+    Slider.prototype.remove = function (i) {
+        var removed = (i === undefined || i < 0 || i > this.length) ? this.current : this.node.slide[i];
+        this.node.slides.removeChild(removed);
+        this.parse();
     };
 
     window.Slider = Slider;

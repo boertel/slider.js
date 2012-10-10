@@ -11,7 +11,7 @@
 }
 /* end here */
 
-.slide-1 { background-color: red; }
+.slide { background-color: red; }
 .slide-2 { background-color: blue; }
 .slide-3 { background-color: green; }
 .slide-4 { background-color: yellow; }
@@ -23,6 +23,19 @@
 </style>
 </head>
 <body>
+
+<div id="slider-1">
+	<div class="slides">
+		<div class="slide"></div>
+		<div class="slide"></div>
+		<div class="slide"></div>
+		<div class="slide"></div>
+		<div class="slide"></div>
+		<div class="slide"></div>
+		<div class="slide"></div>
+		<div class="slide"></div>
+	</div>
+</div>
 
 <div class="slider" id="slider">
     <div class="slides">
@@ -44,19 +57,19 @@
 <script type="text/javascript" src="../js/jquery-1.7.1.min.js"></script>
 <script type="text/javascript" src="./slider.js"></script>
 <script type="text/javascript">
-/*
-slider = new Slider({
+slide2 = new Slider({
     node: {
         wrapper: document.getElementById("slider")
     },
-    loop: false,
+    loop: true,
+    key: { enable: false},
     animation: true,
     duration: {
         pause: 1 * 1000
     }
 });
-*/
-slider = new Slider("slider", {
+
+slider1 = new Slider("slider-1", {
     hide: true,
     property: "width",
     animate: true
@@ -72,13 +85,13 @@ function callback (name) {
     }
     console.log.apply(console, params);
 }
-slider.events.bind("move", callback);
-slider.events.bind("move.before", callback);
-slider.events.bind("next.before", callback);
-slider.events.bind("next", callback);
-slider.events.bind("previous.before", callback);
-slider.events.bind("previous", callback);
-slider.events.bind("animate.after", callback);
+slider1.events.bind("move", callback);
+slider1.events.bind("move.before", callback);
+slider1.events.bind("next.before", callback);
+slider1.events.bind("next", callback);
+slider1.events.bind("previous.before", callback);
+slider1.events.bind("previous", callback);
+slider1.events.bind("animate.after", callback);
 
 /*
 slider.events.bind('move.before', function () {
