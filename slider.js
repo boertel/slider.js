@@ -1,4 +1,5 @@
 (function (window, document, undefined) {
+    // Methods for compatibility matters
     var util = {
         getComputedStyle: function (el, style) {
             var computedStyle;
@@ -17,6 +18,7 @@
             return array.indexOf(search);
         }
     },
+    // define properties for both width and height motions
     property = {
         width: {
             style: "marginLeft",
@@ -34,8 +36,9 @@
         }
     };
 
+
     function Slider() {
-        var wrapper, next,
+        var wrapper,
             params = {},
             args = Array.prototype.slice.call(arguments),
             next = args.shift();
@@ -140,7 +143,7 @@
             if (this.property === "width") {
                 slide.style.cssFloat = "left";
             }
-            value = parseInt(util.getComputedStyle(slide, this.property))
+            value = parseInt(util.getComputedStyle(slide, this.property), 10);
             this.positions.push(sum);
             sum += value;
         }
@@ -152,7 +155,7 @@
 
     // Update pagination elements after moving
     Slider.prototype.pagination = function () {
-        var i, page, classname, length
+        var i, page, classname, length,
             that = this;
 
         // next and previous elements
@@ -177,7 +180,7 @@
         // pages
         length = this.node.page.length;
         if (length > 0) {
-            for (var i = 0; i < length; i += 1) {
+            for (i = 0; i < length; i += 1) {
                 classname = this.node.page[i].className;
                 this.node.page[i].className = classname.replace(' current', '');
                 
@@ -251,6 +254,7 @@
         this.events.trigger('move.before', this);
 
         this.index += (this.index >= (this.length - 1)) ? 0 : 1;
+        this.last = (this.index === this.length-1);
 
         this.events.trigger('next', this);
         this.move(reset);
@@ -261,7 +265,8 @@
        this.events.trigger('previous.before', this);
        this.events.trigger('move.before', this);
 
-       this.index -= (this.index <= 0) ? 0 : 1;
+        this.index -= (this.index <= 0) ? 0 : 1;
+        this.first = (this.index === 0);
 
        this.events.trigger('previous', this);
        this.move(reset);
@@ -281,8 +286,6 @@
         }
 
         this.current = this.node.slide[this.index];
-        this.first = (this.index === 0);
-        this.last = (this.index === this.length-1);
 
         this.pagination();
 
@@ -331,5 +334,11 @@
         this.parse();
     };
 
+    Slider.prototype.insert = function (node, i) {
+        var insertBefore = (i === undefined || i < 0 || i > this.length) ? this.current : this.node.slide[i];
+        this.node.slides.insertBefore(node, insertBefore);
+        this.parse();
+    };
+
     window.Slider = Slider;
-})(window, document)
+})(window, document);
