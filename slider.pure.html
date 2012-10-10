@@ -1,0 +1,97 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+<style>
+/* Specific to slider.js */
+.slide {
+    width: 100px;
+    height: 100px;
+}
+/* end here */
+
+.slide-1 { background-color: red; }
+.slide-2 { background-color: blue; }
+.slide-3 { background-color: green; }
+.slide-4 { background-color: yellow; }
+.slide-5 { background-color: purple; }
+
+.current {
+    text-decoration: underline;
+}
+</style>
+</head>
+<body>
+
+<div class="slider" id="slider">
+    <div class="slides">
+        <div class="slide-1 slide"></div>
+        <div class="slide-2 slide"></div>
+        <div class="slide-3 slide"></div>
+        <div class="slide-4 slide"></div>
+    </div>
+    <a href="#" class="previous">Previous</a>
+    <a href="#" class="next">Next</a>
+    <ul class="pagination">
+        <li class="page">1</li>
+        <li class="page">2</li>
+        <li class="page">3</li>
+        <li class="page">4</li>
+    </ul>
+</div>
+
+<script type="text/javascript" src="../js/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="./slider.js"></script>
+<script type="text/javascript">
+/*
+slider = new Slider({
+    node: {
+        wrapper: document.getElementById("slider")
+    },
+    loop: false,
+    animation: true,
+    duration: {
+        pause: 1 * 1000
+    }
+});
+*/
+slider = new Slider("slider", {
+    hide: true,
+    property: "width",
+    animate: true
+});
+
+function callback (name) {
+    var see = ['first', 'last', 'current'],
+        params = [name];
+
+    for (var i = 0; i < see.length; i += 1) {
+        params.push('| ' + see[i] + ':');
+        params.push(this[see[i]]);
+    }
+    console.log.apply(console, params);
+}
+slider.events.bind("move", callback);
+slider.events.bind("move.before", callback);
+slider.events.bind("next.before", callback);
+slider.events.bind("next", callback);
+slider.events.bind("previous.before", callback);
+slider.events.bind("previous", callback);
+slider.events.bind("animate.after", callback);
+
+/*
+slider.events.bind('move.before', function () {
+    if (this.last) {
+        slide = document.createElement('div');
+        slide.className = "slide-5 slide";
+        this.node.slides.appendChild(slide);
+        this.parse();
+    }
+});
+*/
+
+</script>
+
+</body>
+</html>
