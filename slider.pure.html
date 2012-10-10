@@ -9,6 +9,11 @@
     width: 100px;
     height: 100px;
 }
+
+.mini.slide {
+    width: 25px;
+    height: 25px;
+}
 /* end here */
 
 .slide { background-color: red; }
@@ -24,17 +29,35 @@
 </head>
 <body>
 
+<div id="slider-2">
+	<div class="slides">
+        <div class="slide-1 slide"></div>
+        <div class="slide-2 slide">
+            <div id="mini-slider-2">
+                <div class="slides">
+                    <div class="slide-5 mini slide"></div>
+                    <div class="slide-3 mini slide"></div>
+                </div>
+            </div>
+        </div>
+        <div class="slide-3 slide"></div>
+        <div class="slide-4 slide"></div>
+	</div>
+</div>
+
 <div id="slider-1">
 	<div class="slides">
-		<div class="slide"></div>
-		<div class="slide"></div>
-		<div class="slide"></div>
-		<div class="slide"></div>
-		<div class="slide"></div>
-		<div class="slide"></div>
-		<div class="slide"></div>
-		<div class="slide"></div>
+        <div class="slide-1 slide"></div>
+        <div class="slide-2 slide"></div>
+        <div class="slide-3 slide"></div>
+        <div class="slide-4 slide"></div>
 	</div>
+    <ul class="pagination">
+        <li class="page">1</li>
+        <li class="page">2</li>
+        <li class="page">3</li>
+        <li class="page">4</li>
+    </ul>
 </div>
 
 <div class="slider" id="slider">
@@ -54,10 +77,13 @@
     </ul>
 </div>
 
+
+
 <script type="text/javascript" src="../js/jquery-1.7.1.min.js"></script>
 <script type="text/javascript" src="./slider.js"></script>
 <script type="text/javascript">
-slide2 = new Slider({
+/*
+slider2 = new Slider({
     node: {
         wrapper: document.getElementById("slider")
     },
@@ -68,12 +94,21 @@ slide2 = new Slider({
         pause: 1 * 1000
     }
 });
+*/
 
+slider2 = new Slider("slider-2", {
+});
+console.log(slider2);
+
+/*
 slider1 = new Slider("slider-1", {
     hide: true,
     property: "width",
     animate: true
 });
+*/
+miniSlider = new Slider("mini-slider-2", {loop: true});
+
 
 function callback (name) {
     var see = ['first', 'last', 'current'],
@@ -85,6 +120,8 @@ function callback (name) {
     }
     console.log.apply(console, params);
 }
+
+/*
 slider1.events.bind("move", callback);
 slider1.events.bind("move.before", callback);
 slider1.events.bind("next.before", callback);
@@ -92,6 +129,7 @@ slider1.events.bind("next", callback);
 slider1.events.bind("previous.before", callback);
 slider1.events.bind("previous", callback);
 slider1.events.bind("animate.after", callback);
+*/
 
 /*
 slider.events.bind('move.before', function () {

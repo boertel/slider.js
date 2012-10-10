@@ -106,7 +106,8 @@
     // Initialize nodes with they are not specified
     Slider.prototype.findNodes = function () {
         this.node.slides = this.node.slides || util.getElementsByClassName('slides', this.node.wrapper)[0];
-        this.node.slide = util.getElementsByClassName("slide", this.node.slides);
+        //this.node.slide = util.getElementsByClassName("slide", this.node.slides);
+        this.node.slide = this.node.slides.children;
 
         // Optional
         this.node.pagination = this.node.pagination || util.getElementsByClassName('pagination', this.node.wrapper)[0];
@@ -123,6 +124,7 @@
     // Define css for nodes
     Slider.prototype.css = function () {
         this.node.wrapper.style.overflow = "hidden";
+        this.node.slides.style.overflow = "hidden";
     };
 
     // Parse slides and extract information
