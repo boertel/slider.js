@@ -13,6 +13,7 @@ var Slider = function (args) {
     this.duration = args.duration || 450;
     this.timeoutDuration = args.timeoutDuration || 1000;
     this.auto = args.auto || false;
+    this.circle = args.circle;
 
     // callback functions
     this.onNext = args.onNext;
@@ -177,8 +178,21 @@ Slider.prototype.loop = function () {
     if (this.auto) {
         var that = this;
         this.timeout = setTimeout(function () {
-            that.current = (that.current == that.length-1) ? -1: that.current;
-            that.next();
+            if (that.circle === undefined || that.circle === true) {
+                that.current = (that.current == that.length-1) ? -1: that.current;
+                that.next();
+            } else {
+                if (that.current === that.length - 1) {
+                    that.direction = -1;
+                } else if (that.current === 0) {
+                    that.direction = 1;
+                }
+                if (that.direction > 0) {
+                    that.next();
+                } else {
+                    that.previous();
+                }
+            }
             that.loop();
         }, this.timeoutDuration);
     }
