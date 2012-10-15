@@ -37,24 +37,9 @@
     };
 
 
-    function Slider() {
-        var wrapper,
-            params = {},
-            args = Array.prototype.slice.call(arguments),
-            next = args.shift();
-
-        // assign arguments depending on their type
-        // string: id of the wrapper
-        // otherwise: it's a dictionary of options
-        while (next) {
-            type = typeof next;
-            if (type === "string") {
-                wrapper = document.getElementById(next);
-            } else {
-                params = next;
-            }
-            next = args.shift();
-        }
+    function Slider(wrapper, params) {
+        wrapper = (typeof wrapper === "string") ? document.getElementById(wrapper) : wrapper;
+        params = params || {};
 
         this.index = params.index || 0;     // index of the current slide [0]
         this.current = undefined;           // html object of the current slide
@@ -72,7 +57,7 @@
         };
 
         params.node = params.node || {};
-        params.node.wrapper = params.node.wrapper || params.wrapper || wrapper; // shortcut for the wrapper
+        params.node.wrapper = wrapper; // shortcut for the wrapper
         this.node = {
             wrapper: params.node.wrapper,       // where all default nodes are
             slides: undefined,                  // container of slides
@@ -142,6 +127,7 @@
             slide = this.node.slide[i];
             if (this.property === "width") {
                 slide.style.cssFloat = "left";
+                slide.style.styleFloat = "left";
             }
             value = parseInt(util.getComputedStyle(slide, this.property), 10);
             this.positions.push(sum);
@@ -204,18 +190,25 @@
         };
 
         // keyboard shortcuts
-        document.onkeydown = function (e) {
+        function onkeydown (e) {
+            var keyCode = e.keyCode || e.which;
             previous_onkeydown && previous_onkeydown(e);
 
             if (that.key.enable) {
-                if (that.key.next && (util.indexOf(that.key.next, e.keyCode) !== -1)) {
+                if (that.key.next && (util.indexOf(that.key.next, keyCode) !== -1)) {
                     that.next();
                 }
-                if (that.key.previous && (util.indexOf(that.key.previous, e.keyCode) !== -1)) {
+                if (that.key.previous && (util.indexOf(that.key.previous, keyCode) !== -1)) {
                     that.previous();
                 }
             }
-        };
+        }
+
+        if (document.addEventListener) {
+            document.addEventListener('keydown', onkeydown);
+        } else {
+            document.attachEvent('onkeydown', onkeydown);
+        }
 
         // pages elements
         for (i = 0; i < this.node.page.length; i += 1) {
@@ -341,4 +334,5 @@
     };
 
     window.Slider = Slider;
+
 })(window, document);
