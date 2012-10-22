@@ -95,7 +95,7 @@
     Slider.prototype.findNodes = function () {
         this.node.slides = this.node.slides || util.getElementsByClassName('slides', this.node.wrapper)[0];
         //this.node.slide = util.getElementsByClassName("slide", this.node.slides);
-        this.node.slide = this.node.slides.children;
+        this.node.slide = this.node.slides.childNodes;
 
         // Optional
         this.node.pagination = this.node.pagination || util.getElementsByClassName('pagination', this.node.wrapper)[0];
@@ -258,8 +258,7 @@
        this.events.trigger('previous.before', this);
        this.events.trigger('move.before', this);
 
-        this.index -= (this.index <= 0) ? 0 : 1;
-        this.first = (this.index === 0);
+       this.index -= (this.index <= 0) ? 0 : 1;
 
        this.events.trigger('previous', this);
        this.move(reset);
@@ -279,6 +278,7 @@
         }
 
         this.current = this.node.slide[this.index];
+        this.first = (this.index === 0);
 
         this.pagination();
 
