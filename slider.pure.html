@@ -5,7 +5,7 @@
     <title></title>
 <style>
 /* Specific to slider.js */
-.slide {
+#slider-1, .slide, .slides {
     width: 100px;
     height: 100px;
 }
@@ -29,7 +29,7 @@
 </head>
 <body>
 
-<div id="slider-2">
+<!--div id="slider-2">
 	<div class="slides">
         <div class="slide-1 slide"></div>
         <div class="slide-2 slide">
@@ -43,7 +43,7 @@
         <div class="slide-3 slide"></div>
         <div class="slide-4 slide"></div>
 	</div>
-</div>
+</div-->
 
 <div id="slider-1">
 	<div class="slides">
@@ -60,7 +60,7 @@
     </ul>
 </div>
 
-<div class="slider" id="slider">
+<!--div class="slider" id="slider">
     <div class="slides">
         <div class="slide-1 slide"></div>
         <div class="slide-2 slide"></div>
@@ -75,7 +75,7 @@
         <li class="page">3</li>
         <li class="page">4</li>
     </ul>
-</div>
+</div-->
 
 
 
@@ -96,13 +96,12 @@ slider2 = new Slider({
 });
 */
 
-var slider2 = new Slider("slider-2");
-var miniSlider = new Slider("mini-slider-2", {loop: true});
+//var slider2 = new Slider("slider-2");
 
-var slider = new Slider("slider-1", {
+var slider1 = new Slider("slider-1", {
     hide: true,
-    property: "width",
-    animate: true
+    property: "height",
+    animation: false,
 });
 
 function callback (name) {
@@ -116,7 +115,6 @@ function callback (name) {
     console.log.apply(console, params);
 }
 
-/*
 slider1.events.bind("move", callback);
 slider1.events.bind("move.before", callback);
 slider1.events.bind("next.before", callback);
@@ -124,8 +122,9 @@ slider1.events.bind("next", callback);
 slider1.events.bind("previous.before", callback);
 slider1.events.bind("previous", callback);
 slider1.events.bind("animate.after", callback);
-*/
+slider1.events.bind("animate", callback);
 
+/*
 slider.events.bind('move.before', function () {
     if (this.last) {
         slide = document.createElement('div');
@@ -133,6 +132,7 @@ slider.events.bind('move.before', function () {
         this.insert(slide);
     }
 });
+*/
 
 </script>
 
