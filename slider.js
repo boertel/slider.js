@@ -75,9 +75,9 @@ var Slider = function (args) {
     });
 
     if (this.key.enable) {
-        $(document).unbind().bind("keydown", $.proxy(this, "keys"));
+        $(document).unbind("keydown").bind("keydown", $.proxy(this, "keys"));
         $("input, textarea").focus(function() { $(document).unbind("keydown"); });
-        $("input, textarea").blur(function() { $(document).unbind().bind("keydown", $.proxy(this, "keys")); });
+        $("input, textarea").blur(function() { $(document).unbind("keydown").bind("keydown", $.proxy(this, "keys")); });
     }
 
     // Pagination
